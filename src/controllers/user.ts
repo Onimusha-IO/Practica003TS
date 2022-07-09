@@ -10,12 +10,12 @@ const create = async (req: any, res: any) => {
 };
 
 const assignPassword = async (req: any, res: any) => {
-  const result = UserModel.assingPassword(req.body);
+  const result = await UserModel.assingPassword(req.body);
   if (result.succes) {
     res.status(200).json(result);
   } else {
+    res.status(500).json({ error: result.error });
   }
-  res.status(500).json({ error: result.error });
 };
 
 const validate = async (req: any, res: any) => {

@@ -7,6 +7,7 @@ dotenv.config();
 
 const create: any = async (values: any) => {
   const { email, rut, name, paternallastname, maternallastname } = values;
+  console.log(values)
   try {
     const result = await pool.query(
       "INSERT into users(email, rut, name, paternallastname, maternallastname) VALUES($1, $2, $3, $4, $5) RETURNING *",
@@ -22,13 +23,15 @@ const create: any = async (values: any) => {
 const assingPassword: any = async (values: any) => {
   const { id, password } = values;
   try {
-    const hash = bcrypt.hashSync(password, process.env.SALT || 10);
+    console.log("salt: ", process.env.SALT);
+    const hash = await bcrypt.hash(password, 10);
 
-    await pool.query("UPDATE users SET password = $2 WHERE id = $1", [
+    const res = await pool.query("UPDATE users SET hash = $2 WHERE id = $1", [
       id,
       hash,
     ]);
 
+    console.log("res: ", res);
     return { succes: true, data: "Password set", error: null };
   } catch (error) {
     return { succes: false, data: null, error: (error as Error).message };
@@ -44,7 +47,7 @@ const validate: any = async (values: any) => {
     );
     const { id, mail, name, rut, paternallastname, maternallastname, hash } =
       result.rows[0];
-    const isValid = password === hash;
+    const isValid = bcrypt.compare(password, hash);
     return {
       succes: true,
       data: {
