@@ -6,12 +6,12 @@ import pool from "../util/database";
 dotenv.config();
 
 const create: any = async (values: any) => {
-  const { email, rut, name, paternallastname, maternallastname } = values;
-  console.log(values)
+  const { email, rut, name, paterno, materno } = values;
+  console.log("model: create ", values)
   try {
     const result = await pool.query(
       "INSERT into users(email, rut, name, paternallastname, maternallastname) VALUES($1, $2, $3, $4, $5) RETURNING *",
-      [email, rut, name, paternallastname, maternallastname]
+      [email, rut, name, paterno, materno]
     );
 
     return { succes: true, data: result.rows[0], error: null };

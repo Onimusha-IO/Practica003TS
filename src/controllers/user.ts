@@ -1,4 +1,7 @@
+import jwt from "jsonwebtoken";
+
 import * as UserModel from "../models/user";
+import config from "../util/config";
 
 const create = async (req: any, res: any) => {
   const result = await UserModel.create(req.body);
@@ -22,7 +25,10 @@ const validate = async (req: any, res: any) => {
   const result = await UserModel.validate(req.body);
   if (result.succes) {
     if (result.data.isValid) {
-      res.status(200).json(result.data);
+      const token = jwt.sign({ id: result.data.id }, config.secret, {
+        expiresIn: 300,
+      });
+      res.status(200).json({ ...result.data, token });
     } else {
       res.status(403).json({ error: "User not valid" });
     }

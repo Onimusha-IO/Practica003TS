@@ -9,6 +9,7 @@ const config = {
   dbPassword: process.env.DB_PWD,
   dbName: process.env.DB_NAME,
   dbPort: parseInt(process.env.DB_PORT || "5432"),
+  secret: process.env.SECRET as string,
 };
 
 export default config;
