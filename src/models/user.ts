@@ -47,7 +47,7 @@ const validate: any = async (values: any) => {
     );
     const { id, mail, name, rut, paternallastname, maternallastname, hash } =
       result.rows[0];
-    const isValid = bcrypt.compare(password, hash);
+    const isValid = await bcrypt.compare(password, hash);
     return {
       succes: true,
       data: {
